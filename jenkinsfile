@@ -1,0 +1,24 @@
+pipeline{
+    agent any
+    stages{
+        stage('Fetch code'){
+            steps{
+                echo 'Fetch code'
+                git branch: 'main', credentialsId: 'PAT_git_token1', url: 'https://github.com/pawan12655/Maven-Build.git'
+            }
+        }
+        
+        stage('Maven Build'){
+            steps{
+                sh 'mvn clean install'
+            }
+        }
+        stage('Deploy The code'){
+            steps{
+                echo 'Fetch code'
+                deploy adapters: [tomcat9(credentialsId: 'tomcat_is', path: '', url: 'http://localhost:9090/')], contextPath: null, onFailure: false, war: '**/*.war'
+                
+            }
+        }
+    }
+}
